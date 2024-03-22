@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "@gm-dev/eslint-config/node"
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "dist"
+  ]
+}
