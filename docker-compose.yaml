@@ -10,7 +10,7 @@ services:
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
     volumes:
-      - ./data/postgres:/bitname/postgresql
+      - ./data/postgres:/bitnami/postgresql
 
 volumes:
   postgres:
