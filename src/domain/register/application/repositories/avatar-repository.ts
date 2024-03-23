@@ -1,5 +1,3 @@
-import { Response } from "@/core/response";
-
 import { Avatar } from "../../enterprise/entities/avatar";
 
 type SaveAvatar = {
@@ -12,10 +10,14 @@ type EditAvatar = {
 	id: string;
 };
 
-export interface IAvatarRepository {
-	findByUserId: (userId: string) => Promise<Avatar | null>;
-	findById(id: string): Promise<Avatar | undefined>;
-	save(avatar: SaveAvatar): Promise<Avatar>;
-	delete(id: string): Promise<void>;
-	edit(avatar: EditAvatar): Promise<Avatar>;
+export abstract class IAvatarRepository {
+	abstract findByUserId: (userId: string) => Promise<Avatar | null>;
+
+	abstract findById(id: string): Promise<Avatar | undefined>;
+
+	abstract save(avatar: SaveAvatar): Promise<Avatar>;
+
+	abstract delete(id: string): Promise<void>;
+
+	abstract edit(avatar: EditAvatar): Promise<Avatar>;
 }

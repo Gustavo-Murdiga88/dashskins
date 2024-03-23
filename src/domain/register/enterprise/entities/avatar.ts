@@ -33,10 +33,10 @@ export class Avatar extends Entity<AvatarProps> {
 		id,
 		userId,
 	}: {
-		url: string;
+		url?: string | null;
 		id?: string;
 		userId: string;
 	}) {
-		return new Avatar({ url, id: id || randomUUID(), userId });
+		return new Avatar({ url: url ?? "", id: id || randomUUID(), userId });
 	}
 }

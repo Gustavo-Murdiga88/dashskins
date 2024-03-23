@@ -5,7 +5,7 @@ import { Either, left, right } from "@/core/either";
 import { User } from "../../enterprise/entities/user";
 import { IUserRepository } from "../repositories/user-repository";
 
-type EditUserUsecaseResponse = Promise<Either<Error, User>>;
+type UpdateUserUseCaseResponse = Promise<Either<Error, User>>;
 type EditUser = {
 	name?: string;
 	id: string;
@@ -15,7 +15,7 @@ type EditUser = {
 };
 
 @Injectable()
-export class EditUserUseCase {
+export class UpdateUserUseCase {
 	private repository: IUserRepository;
 
 	constructor(repository: IUserRepository) {
@@ -28,7 +28,7 @@ export class EditUserUseCase {
 		name,
 		role,
 		id,
-	}: EditUser): EditUserUsecaseResponse {
+	}: EditUser): UpdateUserUseCaseResponse {
 		const userAlreadyExists = await this.repository.findById(id);
 
 		if (!userAlreadyExists) {

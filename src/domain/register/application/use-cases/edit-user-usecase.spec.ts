@@ -1,18 +1,18 @@
 import { Left } from "@/core/either";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
-import { EditUserUseCase } from "./edit-user-usecase";
+import { UpdateUserUseCase } from "./edit-user-usecase";
 import { SaveUserUseCase } from "./save-user-usecase";
 
 describe("Edit user usecase", async () => {
-	let sut: EditUserUseCase;
+	let sut: UpdateUserUseCase;
 	let usecase: SaveUserUseCase;
 	let repository: UserInMemoryRepository;
 
 	beforeEach(() => {
 		repository = new UserInMemoryRepository();
 		usecase = new SaveUserUseCase(repository);
-		sut = new EditUserUseCase(repository);
+		sut = new UpdateUserUseCase(repository);
 	});
 
 	it("should be able edit an user", async () => {

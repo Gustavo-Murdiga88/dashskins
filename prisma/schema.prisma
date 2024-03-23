@@ -26,14 +26,15 @@ model User {
   name  String
   role  Role   @default(ALL)
 
-  avatar Avatar[]
+  avatar Avatar?
 
   @@map("users")
 }
 
 model Avatar {
-  id      String @id @default(uuid())
-  user_id String
+  id      String  @id @default(uuid())
+  user_id String  @unique()
+  url     String?
 
   user User @relation(fields: [user_id], references: [id])
 
