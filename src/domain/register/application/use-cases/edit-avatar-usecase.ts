@@ -8,9 +8,8 @@ import { IAvatarRepository } from "../repositories/avatar-repository";
 
 type EditAvatarUsecaseResponse = Promise<Either<Error, Avatar>>;
 type EditAvatar = {
-	buffer: Buffer;
-	userId: string;
-	type: string;
+	id: string;
+	url: string;
 };
 @Injectable()
 export class EditAvatarUseCase {
@@ -20,20 +19,17 @@ export class EditAvatarUseCase {
 		this.repository = repository;
 	}
 
-	async execute({
-		buffer,
-		type,
-		userId,
-	}: EditAvatar): EditAvatarUsecaseResponse {
-		const avatar = await this.repository.edit({
-			buffer,
-			userId,
-			type,
-		});
+	async execute({ id, url }: EditAvatar): EditAvatarUsecaseResponse {
+		const avatarAlreadyExists = await this.repository.findById(id);
 
-		if (avatar instanceof Error) {
-			return left(avatar);
+		if (!avatarAlreadyExists) {
+			return left(new Error("Avatar not found"));
 		}
+
+		const avatar = await this.repository.edit({
+			id,
+			url,
+		});
 
 		return right(avatar);
 	}

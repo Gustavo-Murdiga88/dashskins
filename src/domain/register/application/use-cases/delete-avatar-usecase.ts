@@ -5,7 +5,7 @@ import { Response } from "@/core/response";
 
 import { IAvatarRepository } from "../repositories/avatar-repository";
 
-type DeleteAvatarUsecaseResponse = Promise<Either<Error, Response>>;
+type DeleteAvatarUsecaseResponse = Promise<Either<Error, null>>;
 type DeleteAvatar = {
 	id: string;
 };
@@ -18,14 +18,14 @@ export class DeleteAvatarUseCase {
 	}
 
 	async execute({ id }: DeleteAvatar): DeleteAvatarUsecaseResponse {
-		const avatar = await this.repository.delete(id);
+		const avatarExists = await this.repository.findById(id);
 
-		if (avatar instanceof Error) {
-			return left(avatar);
+		if (!avatarExists) {
+			return left(new Error("Avatar not found"));
 		}
 
-		return right({
-			message: "avatar is deleted successfully",
-		} satisfies Response);
+		await this.repository.delete(id);
+
+		return right(null);
 	}
 }

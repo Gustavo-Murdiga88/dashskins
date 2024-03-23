@@ -1,4 +1,4 @@
-class Right<L, R> {
+export class Right<L, R> {
 	value: R;
 
 	constructor(value: R) {
@@ -15,7 +15,7 @@ class Right<L, R> {
 	}
 }
 
-class Left<L, R> {
+export class Left<L, R> {
 	value: L;
 
 	constructor(value: L) {

@@ -39,6 +39,14 @@ export class User extends Entity<UserProps> {
 		return this.props.id;
 	}
 
+	get avatar() {
+		return this.props.avatar;
+	}
+
+	set avatar(avatar: Avatar) {
+		this.props.avatar = avatar;
+	}
+
 	static create({
 		age,
 		avatar,
@@ -49,7 +57,8 @@ export class User extends Entity<UserProps> {
 	}: Optional<UserProps, "avatar" | "id">) {
 		return new User({
 			age,
-			avatar: avatar || Avatar.create({ url: "" }),
+			avatar:
+				avatar || Avatar.create({ url: "", id: randomUUID(), userId: "" }),
 			email,
 			id: id || randomUUID(),
 			name,

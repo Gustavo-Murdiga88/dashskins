@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
-import { Response } from "@/core/response";
 
+import { User } from "../../enterprise/entities/user";
 import { IUserRepository } from "../repositories/user-repository";
 
-type EditUserUsecaseResponse = Promise<Either<Error, Response>>;
+type EditUserUsecaseResponse = Promise<Either<Error, User>>;
 type EditUser = {
-	name: string;
+	name?: string;
 	id: string;
-	age: number;
-	email: string;
+	age?: number;
+	email?: string;
 	role?: "EDIT" | "DELETE" | "ALL";
 };
 
@@ -29,13 +29,13 @@ export class EditUserUseCase {
 		role,
 		id,
 	}: EditUser): EditUserUsecaseResponse {
-		const user = await this.repository.findById(id);
+		const userAlreadyExists = await this.repository.findById(id);
 
-		if (!user) {
+		if (!userAlreadyExists) {
 			return left(new Error("User not found"));
 		}
 
-		await this.repository.edit({
+		const user = await this.repository.edit({
 			age,
 			email,
 			name,
@@ -43,8 +43,6 @@ export class EditUserUseCase {
 			role,
 		});
 
-		return right({
-			message: "User is edited successfully",
-		} satisfies Response);
+		return right(user);
 	}
 }

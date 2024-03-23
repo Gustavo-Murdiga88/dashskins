@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { randomUUID } from "crypto";
 
 import { IPagination } from "@/core/pagination";
@@ -63,11 +64,10 @@ export class UserInMemoryRepository implements IUserRepository {
 	}): Promise<IPagination<UserAvatar>> {
 		const skip = page * 10;
 		const take = skip + 10;
-		const totalPages = Math.ceil(this.users.length / 10);
 
 		const users = this.users
 			.filter(({ props: user }) => {
-				if (user.name.includes(name) || name === "") {
+				if (user.name.includes(name) || !name) {
 					return true;
 				}
 
@@ -80,38 +80,37 @@ export class UserInMemoryRepository implements IUserRepository {
 
 				return UserAvatar.create({
 					age: user.age,
-					avatar: avatar || Avatar.create({ url: "" }),
+					avatar:
+						avatar ||
+						Avatar.create({ userId: user.id, url: faker.image.url() }),
 					email: user.email,
 					id: user.id,
 					name: user.name,
 					role: user.role,
 				});
-			})
-			.slice(skip, take);
+			});
 
 		return {
 			totalElements: users.length,
-			totalPages,
-			data: users,
+			totalPages: Math.ceil(users.length / 10),
+			data: users.slice(skip, take),
 		};
 	}
 
-	async edit(user: EditUserProps): Promise<void> {
+	async edit(user: EditUserProps): Promise<User> {
 		const userIndex = this.users.findIndex(
 			({ props: currentUser }) => currentUser.id === user.id,
 		);
 
-		if (userIndex === -1) {
-			throw new Error("user does not exists");
-		}
-
 		this.users[userIndex] = User.create({
-			age: user.age,
-			email: user.email,
-			name: user.name,
-			role: user.role ?? "ALL",
+			age: user.age ?? this.users[userIndex].props.age,
+			email: user.email ?? this.users[userIndex].props.email,
+			name: user.name ?? this.users[userIndex].props.name,
+			role: user.role ?? this.users[userIndex].props.role,
 			id: user.id,
 		});
+
+		return this.users[userIndex];
 	}
 
 	async delete(id: string): Promise<void> {

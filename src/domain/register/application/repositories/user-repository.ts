@@ -6,7 +6,7 @@ import { User, UserProps } from "@/domain/register/enterprise/entities/user";
 import { UserAvatar } from "../../enterprise/value-objects/user-with-avatar";
 
 export type SaveUserProps = Optional<UserProps, "avatar" | "id">;
-export type EditUserProps = Optional<UserProps, "avatar" | "role">;
+export type EditUserProps = Partial<UserProps>;
 export type ListUserFilter = {
 	name?: string;
 	page?: number;
@@ -16,6 +16,6 @@ export interface IUserRepository {
 	findById(id: string): Promise<User | null>;
 	save(user: SaveUserProps): Promise<User>;
 	list(filter: ListUserFilter): Promise<IPagination<UserAvatar>>;
-	edit(user: EditUserProps): Promise<void>;
+	edit(user: EditUserProps): Promise<User>;
 	delete(id: string): Promise<void>;
 }

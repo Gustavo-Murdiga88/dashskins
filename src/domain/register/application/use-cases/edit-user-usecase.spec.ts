@@ -1,21 +1,21 @@
 import { Left } from "@/core/either";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
-import { DeleteUserUseCase } from "./delete-user-usecase";
+import { EditUserUseCase } from "./edit-user-usecase";
 import { SaveUserUseCase } from "./save-user-usecase";
 
-describe("Delete user usecase", async () => {
-	let sut: DeleteUserUseCase;
+describe("Edit user usecase", async () => {
+	let sut: EditUserUseCase;
 	let usecase: SaveUserUseCase;
 	let repository: UserInMemoryRepository;
 
 	beforeEach(() => {
 		repository = new UserInMemoryRepository();
 		usecase = new SaveUserUseCase(repository);
-		sut = new DeleteUserUseCase(repository);
+		sut = new EditUserUseCase(repository);
 	});
 
-	it("should be able delete an user", async () => {
+	it("should be able edit an user", async () => {
 		const user1 = await usecase.execute({
 			age: 20,
 			email: "john@john.com.br",
@@ -37,20 +37,29 @@ describe("Delete user usecase", async () => {
 		}
 
 		const user = user1.value;
-		await sut.execute({ id: user.id });
 
-		expect(repository.users).toHaveLength(1);
-		expect(repository.users).toEqual(expect.any(Array));
-		expect(repository.users).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({
-					name: "Dudu",
-				}),
-			]),
+		const userEdited = await sut.execute({
+			age: 32,
+			email: "hawaii@hawaii.com.br",
+			id: user.id,
+			name: "Paris",
+		});
+
+		if (userEdited.isLeft()) {
+			throw new Error("User not found");
+		}
+
+		expect(userEdited.value).toEqual(
+			expect.objectContaining({
+				age: 32,
+				email: "hawaii@hawaii.com.br",
+				id: user.id,
+				name: "Paris",
+			}),
 		);
 	});
 
-	it("should be not able delete an user that not exist", async () => {
+	it("should be not able edit an user that not exist", async () => {
 		await usecase.execute({
 			age: 20,
 			email: "john@john.com.br",
@@ -65,7 +74,10 @@ describe("Delete user usecase", async () => {
 
 		expect(
 			await sut.execute({
-				id: "askdjhasljkdhsa",
+				age: 10,
+				id: "as.xdljhdasjkldas",
+				email: "hawaii@hawaii.com.br",
+				name: "Paris",
 			}),
 		).toBeInstanceOf(Left);
 	});

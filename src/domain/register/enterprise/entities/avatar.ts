@@ -5,17 +5,38 @@ import { Entity } from "@/core/entity";
 type AvatarProps = {
 	id: string;
 	url: string;
+	userId: string;
 };
 export class Avatar extends Entity<AvatarProps> {
-	protected constructor(props: { url: string; id: string }) {
+	protected constructor(props: { url: string; id: string; userId: string }) {
 		super(props);
 	}
 
-	set imageURL(url: string) {
+	set url(url: string) {
 		this.props.url = url;
 	}
 
-	static create({ url, id }: { url: string; id?: string }) {
-		return new Avatar({ url, id: id || randomUUID() });
+	get url() {
+		return this.props.url;
+	}
+
+	get userId() {
+		return this.props.userId;
+	}
+
+	get id() {
+		return this.props.id;
+	}
+
+	static create({
+		url,
+		id,
+		userId,
+	}: {
+		url: string;
+		id?: string;
+		userId: string;
+	}) {
+		return new Avatar({ url, id: id || randomUUID(), userId });
 	}
 }
