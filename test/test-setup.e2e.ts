@@ -1,6 +1,11 @@
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
+
 import { PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { config } from "dotenv";
+
+const execAsync = promisify(exec);
 
 config({
 	override: true,
@@ -21,13 +26,15 @@ function generateScheme(schemeName: string) {
 }
 
 async function deleteSchema(name: string) {
-	await prisma.$executeRaw`DROP SCHEMA IF EXISTS ${name} CASCADE`;
+	const query = `DROP SCHEMA IF EXISTS "${name}" CASCADE`;
+	await prisma.$executeRawUnsafe(query);
 }
 
 export async function deleteCurrentSchema() {
 	await deleteSchema(schemaName);
 }
 
-beforeAll(() => {
+beforeAll(async () => {
 	generateScheme(schemaName);
+	await execAsync("prisma migrate deploy");
 });

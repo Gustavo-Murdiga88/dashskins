@@ -12,6 +12,7 @@ export default defineConfig({
 		configPaths(),
 	],
 	test: {
+		setupFiles: ["./test/test-setup.e2e.ts"],
 		include: ["**/*.e2e-{spec,test}.ts"],
 		globals: true,
 	},
