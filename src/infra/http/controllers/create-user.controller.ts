@@ -38,7 +38,13 @@ export class CreateUserController {
 		}
 
 		return {
-			user,
+			user: {
+				id: user.value.id,
+				name: user.value.name,
+				age: user.value.age,
+				email: user.value.email,
+				role: user.value.role,
+			},
 		};
 	}
 }

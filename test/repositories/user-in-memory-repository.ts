@@ -97,7 +97,7 @@ export class UserInMemoryRepository implements IUserRepository {
 		};
 	}
 
-	async edit(user: EditUserProps): Promise<User> {
+	async update(user: EditUserProps): Promise<User> {
 		const userIndex = this.users.findIndex(
 			({ props: currentUser }) => currentUser.id === user.id,
 		);

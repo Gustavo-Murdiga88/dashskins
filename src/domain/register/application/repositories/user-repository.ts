@@ -20,7 +20,7 @@ export abstract class IUserRepository {
 
 	abstract list(filter: ListUserFilter): Promise<IPagination<UserAvatar>>;
 
-	abstract edit(user: EditUserProps): Promise<User>;
+	abstract update(user: EditUserProps): Promise<User>;
 
 	abstract delete(id: string): Promise<void>;
 }

@@ -15,7 +15,7 @@ type SaveUser = {
 
 @Injectable()
 export class SaveUserUseCase {
-	private repository: IUserRepository = {} as any;
+	private repository: IUserRepository;
 
 	constructor(repository: IUserRepository) {
 		this.repository = repository;

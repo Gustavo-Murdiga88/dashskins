@@ -15,8 +15,8 @@ export class UserAvatar extends Entity<IUserWithAvatar> {
 		return new UserAvatar(props);
 	}
 
-	get avatarUrl() {
-		return this.props.avatar.imageURL;
+	get url() {
+		return this.props.avatar.url;
 	}
 
 	get name() {
@@ -37,5 +37,9 @@ export class UserAvatar extends Entity<IUserWithAvatar> {
 
 	get id() {
 		return this.props.id;
+	}
+
+	get avatarId() {
+		return this.props.avatar.id;
 	}
 }

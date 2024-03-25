@@ -1,12 +1,4 @@
-import {
-	BadRequestException,
-	Body,
-	Controller,
-	Param,
-	Put,
-	Query,
-	UsePipes,
-} from "@nestjs/common";
+import { Body, Controller, Param, Put, UsePipes } from "@nestjs/common";
 import { z } from "zod";
 
 import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-user-usecase";
@@ -14,6 +6,7 @@ import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-
 import { ZodValidationPipe } from "../pipe/zod.pipe";
 
 const updateUserScheme = z.object({
+	id: z.string().uuid(),
 	name: z.string().optional(),
 	age: z.number().optional(),
 	email: z.string().email().optional(),
@@ -23,17 +16,17 @@ const updateUserScheme = z.object({
 type BodyParsed = z.infer<typeof updateUserScheme>;
 
 @Controller()
-export class CreateUserController {
+export class UpdateUserController {
 	private usecase: UpdateUserUseCase;
 
 	constructor(usecase: UpdateUserUseCase) {
 		this.usecase = usecase;
 	}
 
-	@Put("/users/:id")
+	@Put("/user")
 	@UsePipes(new ZodValidationPipe(updateUserScheme))
-	async execute(@Body() body: BodyParsed, @Param("id") id: string) {
-		const { age, email, name, role } = body;
+	async execute(@Body() body: BodyParsed) {
+		const { age, email, name, role, id } = body;
 
 		const userEdited = await this.usecase.execute({
 			id,
@@ -48,7 +41,7 @@ export class CreateUserController {
 		}
 
 		return {
-			message: "User was deleted successfully",
+			message: "User was updated successfully",
 		};
 	}
 }

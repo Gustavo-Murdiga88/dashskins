@@ -55,12 +55,12 @@ export class User extends Entity<UserProps> {
 		name,
 		role,
 	}: Optional<UserProps, "avatar" | "id">) {
+		const userId = id || randomUUID();
 		return new User({
 			age,
-			avatar:
-				avatar || Avatar.create({ url: "", id: randomUUID(), userId: "" }),
+			avatar: avatar || Avatar.create({ url: "", id: randomUUID(), userId }),
 			email,
-			id: id || randomUUID(),
+			id: userId,
 			name,
 			role,
 		});

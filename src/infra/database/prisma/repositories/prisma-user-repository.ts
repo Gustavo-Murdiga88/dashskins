@@ -71,6 +71,7 @@ export class PrismaUserRepository implements IUserRepository {
 
 		return User.create({
 			age: userCreated.age,
+			id: userCreated.id,
 			email: userCreated.email,
 			name: userCreated.name,
 			role: userCreated.role,
@@ -82,7 +83,7 @@ export class PrismaUserRepository implements IUserRepository {
 		page = 0,
 	}: ListUserFilter): Promise<IPagination<UserAvatar>> {
 		const take = 10;
-		const skip = page * take + take;
+		const skip = page * take;
 
 		const { _count } = await this.prisma.user.aggregate({
 			_count: true,
@@ -99,7 +100,6 @@ export class PrismaUserRepository implements IUserRepository {
 					contains: name,
 				},
 			},
-
 			include: {
 				avatar: true,
 			},
@@ -118,7 +118,7 @@ export class PrismaUserRepository implements IUserRepository {
 		};
 	}
 
-	async edit(user: EditUserProps): Promise<User> {
+	async update(user: EditUserProps): Promise<User> {
 		const userCreated = await this.prisma.user.update({
 			where: {
 				id: user.id,
