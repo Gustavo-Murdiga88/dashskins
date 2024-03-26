@@ -31,6 +31,7 @@ describe("Delete avatar usecase", async () => {
 			}),
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
+			password: faker.internet.password(),
 		});
 
 		const user2 = await usecase.execute({
@@ -40,6 +41,7 @@ describe("Delete avatar usecase", async () => {
 			}),
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
+			password: faker.internet.password(),
 		});
 
 		if (user.isLeft()) {
@@ -94,6 +96,7 @@ describe("Delete avatar usecase", async () => {
 			}),
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
+			password: faker.internet.password(),
 		});
 
 		if (user.isLeft()) {

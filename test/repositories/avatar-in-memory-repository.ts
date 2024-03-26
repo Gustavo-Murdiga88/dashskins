@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
 
-import { IAvatarRepository } from "@/domain/register/application/repositories/avatar-repository";
+import { AvatarRepository } from "@/domain/register/application/repositories/avatar-repository";
 import { Avatar } from "@/domain/register/enterprise/entities/avatar";
 
-export class AvatarInMemoryRepository implements IAvatarRepository {
+export class AvatarInMemoryRepository implements AvatarRepository {
 	avatars: Avatar[] = [];
 
 	async findByUserId(userId: string): Promise<Avatar | null> {

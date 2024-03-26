@@ -3,12 +3,12 @@ import { faker } from "@faker-js/faker";
 import { AvatarInMemoryRepository } from "@/test/repositories/avatar-in-memory-repository";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
-import { IAvatarRepository } from "../repositories/avatar-repository";
+import { AvatarRepository } from "../repositories/avatar-repository";
 import { SaveAvatarUseCase } from "./save-avatar-usecase";
 import { SaveUserUseCase } from "./save-user-usecase";
 
 describe("Save avatar usecase", async () => {
-	let repository: IAvatarRepository;
+	let repository: AvatarRepository;
 	let userRepository: UserInMemoryRepository;
 	let usecase: SaveUserUseCase;
 	let sut: SaveAvatarUseCase;
@@ -29,6 +29,7 @@ describe("Save avatar usecase", async () => {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+			password: faker.internet.password(),
 		});
 
 		if (user.isLeft()) {
@@ -59,6 +60,7 @@ describe("Save avatar usecase", async () => {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+			password: faker.internet.password(),
 		});
 
 		if (user.isLeft()) {

@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
 
 import { User } from "../../enterprise/entities/user";
-import { IUserRepository } from "../repositories/user-repository";
+import { UserRepository } from "../repositories/user-repository";
 
 type SaveUserRegisterUsecaseResponse = Promise<Either<Error, User>>;
 type SaveUser = {
@@ -11,13 +11,14 @@ type SaveUser = {
 	age: number;
 	email: string;
 	role?: "EDIT" | "DELETE" | "ALL";
+	password: string;
 };
 
 @Injectable()
 export class SaveUserUseCase {
-	private repository: IUserRepository;
+	private repository: UserRepository;
 
-	constructor(repository: IUserRepository) {
+	constructor(repository: UserRepository) {
 		this.repository = repository;
 	}
 
@@ -26,6 +27,7 @@ export class SaveUserUseCase {
 		email,
 		name,
 		role,
+		password,
 	}: SaveUser): SaveUserRegisterUsecaseResponse {
 		const userWithThisEmailAlreadyExists =
 			await this.repository.findByEmail(email);
@@ -39,6 +41,7 @@ export class SaveUserUseCase {
 			email,
 			name,
 			role: role || "ALL",
+			password,
 		});
 
 		return right(user);

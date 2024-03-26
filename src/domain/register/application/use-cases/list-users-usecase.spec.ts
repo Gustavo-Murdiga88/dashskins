@@ -1,5 +1,4 @@
 import { faker } from "@faker-js/faker";
-import { randomUUID } from "crypto";
 
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
@@ -25,6 +24,7 @@ describe("List users usecase", async () => {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+			password: faker.internet.password(),
 		});
 
 		await usecase.execute({
@@ -32,12 +32,14 @@ describe("List users usecase", async () => {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+			password: faker.internet.password(),
 		});
 		await usecase.execute({
 			age: faker.number.int({ min: 10, max: 30 }),
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+			password: faker.internet.password(),
 		});
 
 		const listOfUsers = await sut.execute({
@@ -63,6 +65,7 @@ describe("List users usecase", async () => {
 					email: faker.internet.email(),
 					name: faker.person.fullName(),
 					role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
+					password: faker.internet.password(),
 				}),
 			);
 

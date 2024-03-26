@@ -4,7 +4,7 @@ import { Either, left, right } from "@/core/either";
 import { IPagination } from "@/core/pagination";
 
 import { UserAvatar } from "../../enterprise/value-objects/user-with-avatar";
-import { IUserRepository } from "../repositories/user-repository";
+import { UserRepository } from "../repositories/user-repository";
 
 type ListUserUsecaseResponse = Promise<Either<Error, IPagination<UserAvatar>>>;
 type ListUser = {
@@ -13,9 +13,9 @@ type ListUser = {
 };
 @Injectable()
 export class ListUserUseCase {
-	private repository: IUserRepository;
+	private repository: UserRepository;
 
-	constructor(repository: IUserRepository) {
+	constructor(repository: UserRepository) {
 		this.repository = repository;
 	}
 

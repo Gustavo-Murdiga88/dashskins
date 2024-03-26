@@ -4,13 +4,14 @@ import { randomUUID } from "crypto";
 import { IPagination } from "@/core/pagination";
 import {
 	EditUserProps,
-	IUserRepository,
+	SaveUserProps,
+	UserRepository,
 } from "@/domain/register/application/repositories/user-repository";
 import { Avatar } from "@/domain/register/enterprise/entities/avatar";
 import { User } from "@/domain/register/enterprise/entities/user";
 import { UserAvatar } from "@/domain/register/enterprise/value-objects/user-with-avatar";
 
-export class UserInMemoryRepository implements IUserRepository {
+export class UserInMemoryRepository implements UserRepository {
 	users: User[] = [];
 
 	avatars: Avatar[] = [];
@@ -23,6 +24,19 @@ export class UserInMemoryRepository implements IUserRepository {
 		}
 
 		return user;
+	}
+
+	async create(user: SaveUserProps): Promise<void> {
+		const userCreated = User.create({
+			age: user.age,
+			email: user.email,
+			name: user.name,
+			role: user.role,
+			id: randomUUID(),
+			password: user.password,
+		});
+
+		this.users.push(userCreated);
 	}
 
 	async findById(id: string): Promise<User | null> {
@@ -40,6 +54,7 @@ export class UserInMemoryRepository implements IUserRepository {
 			age: number;
 			email: string;
 			role: "EDIT" | "DELETE" | "ALL";
+			password: string;
 		},
 	): Promise<User> {
 		const userCreated = User.create({
@@ -48,6 +63,7 @@ export class UserInMemoryRepository implements IUserRepository {
 			name: user.name,
 			role: user.role,
 			id: randomUUID(),
+			password: user.password,
 		});
 
 		this.users.push(userCreated);
@@ -108,6 +124,7 @@ export class UserInMemoryRepository implements IUserRepository {
 			name: user.name ?? this.users[userIndex].props.name,
 			role: user.role ?? this.users[userIndex].props.role,
 			id: user.id,
+			password: user.password ?? this.users[userIndex].props.password,
 		});
 
 		return this.users[userIndex];

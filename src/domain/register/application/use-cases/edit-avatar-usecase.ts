@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
-import { Response } from "@/core/response";
 
 import { Avatar } from "../../enterprise/entities/avatar";
-import { IAvatarRepository } from "../repositories/avatar-repository";
+import { AvatarRepository } from "../repositories/avatar-repository";
 
 type EditAvatarUsecaseResponse = Promise<Either<Error, Avatar>>;
 type EditAvatar = {
@@ -13,9 +12,9 @@ type EditAvatar = {
 };
 @Injectable()
 export class EditAvatarUseCase {
-	private repository: IAvatarRepository;
+	private repository: AvatarRepository;
 
-	constructor(repository: IAvatarRepository) {
+	constructor(repository: AvatarRepository) {
 		this.repository = repository;
 	}
 

@@ -12,6 +12,7 @@ export type UserProps = {
 	email: string;
 	role: "EDIT" | "DELETE" | "ALL";
 	id: string;
+	password: string;
 };
 
 export class User extends Entity<UserProps> {
@@ -47,6 +48,10 @@ export class User extends Entity<UserProps> {
 		this.props.avatar = avatar;
 	}
 
+	get password() {
+		return this.props.password;
+	}
+
 	static create({
 		age,
 		avatar,
@@ -54,6 +59,7 @@ export class User extends Entity<UserProps> {
 		id,
 		name,
 		role,
+		password,
 	}: Optional<UserProps, "avatar" | "id">) {
 		const userId = id || randomUUID();
 		return new User({
@@ -63,6 +69,7 @@ export class User extends Entity<UserProps> {
 			id: userId,
 			name,
 			role,
+			password,
 		});
 	}
 }

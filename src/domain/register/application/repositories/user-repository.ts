@@ -11,7 +11,7 @@ export type ListUserFilter = {
 	name?: string;
 	page?: number;
 };
-export abstract class IUserRepository {
+export abstract class UserRepository {
 	abstract findByEmail(email: string): Promise<User | null>;
 
 	abstract findById(id: string): Promise<User | null>;
@@ -23,4 +23,6 @@ export abstract class IUserRepository {
 	abstract update(user: EditUserProps): Promise<User>;
 
 	abstract delete(id: string): Promise<void>;
+
+	abstract create(user: SaveUserProps): Promise<void>;
 }

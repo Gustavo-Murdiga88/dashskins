@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-type EnvProps = {
-	DATABASE_URL: string;
-};
+import { Env } from "@/infra/env";
+
 declare global {
 	namespace NodeJS {
-		interface ProcessEnv extends EnvProps {}
+		interface ProcessEnv extends Env {}
 	}
 }

@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker";
+
 import { Left } from "@/core/either";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
@@ -20,12 +22,14 @@ describe("Delete user usecase", async () => {
 			age: 20,
 			email: "john@john.com.br",
 			name: "John Doe",
+			password: faker.internet.password(),
 		});
 
 		const user2 = await usecase.execute({
 			age: 30,
 			email: "dud@dud.com.br",
 			name: "Dudu",
+			password: faker.internet.password(),
 		});
 
 		if (user1.isLeft()) {
@@ -55,12 +59,14 @@ describe("Delete user usecase", async () => {
 			age: 20,
 			email: "john@john.com.br",
 			name: "John Doe",
+			password: faker.internet.password(),
 		});
 
 		await usecase.execute({
 			age: 30,
 			email: "dud@dud.com.br",
 			name: "Dudu",
+			password: faker.internet.password(),
 		});
 
 		expect(

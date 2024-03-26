@@ -10,6 +10,7 @@ const userSchemaValidation = z.object({
 	age: z.number(),
 	email: z.string().email(),
 	role: z.enum(["ALL", "EDIT", "DELETE"]).default("ALL"),
+	password: z.string(),
 });
 
 type BodyParsed = z.infer<typeof userSchemaValidation>;
@@ -25,12 +26,13 @@ export class CreateUserController {
 	@Post("/user")
 	@UsePipes(new ZodValidationPipe(userSchemaValidation))
 	async execute(@Body() body: BodyParsed) {
-		const { age, email, name, role } = body;
+		const { age, email, name, role, password } = body;
 		const user = await this.usecase.execute({
 			age,
 			email,
 			name,
 			role,
+			password,
 		});
 
 		if (user.isLeft()) {

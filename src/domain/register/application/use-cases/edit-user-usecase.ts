@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
 
 import { User } from "../../enterprise/entities/user";
-import { IUserRepository } from "../repositories/user-repository";
+import { UserRepository } from "../repositories/user-repository";
 
 type UpdateUserUseCaseResponse = Promise<Either<Error, User>>;
 type EditUser = {
@@ -16,9 +16,9 @@ type EditUser = {
 
 @Injectable()
 export class UpdateUserUseCase {
-	private repository: IUserRepository;
+	private repository: UserRepository;
 
-	constructor(repository: IUserRepository) {
+	constructor(repository: UserRepository) {
 		this.repository = repository;
 	}
 

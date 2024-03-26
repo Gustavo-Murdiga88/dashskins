@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
-import { IUserRepository } from "../repositories/user-repository";
+import { UserRepository } from "../repositories/user-repository";
 
 type DeleteUserUsecaseResponse = Promise<Either<Error, null>>;
 type DeleteUser = {
@@ -10,9 +10,9 @@ type DeleteUser = {
 };
 @Injectable()
 export class DeleteUserUseCase {
-	private repository: IUserRepository;
+	private repository: UserRepository;
 
-	constructor(repository: IUserRepository) {
+	constructor(repository: UserRepository) {
 		this.repository = repository;
 	}
 

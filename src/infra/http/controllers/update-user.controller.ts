@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Put, UsePipes } from "@nestjs/common";
+import { Body, Controller, Put, UsePipes } from "@nestjs/common";
 import { z } from "zod";
 
 import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-user-usecase";

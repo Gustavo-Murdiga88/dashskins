@@ -1,11 +1,12 @@
+import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 
 import { IPagination } from "@/core/pagination";
 import {
 	EditUserProps,
-	IUserRepository,
 	ListUserFilter,
 	SaveUserProps,
+	UserRepository,
 } from "@/domain/register/application/repositories/user-repository";
 import { User } from "@/domain/register/enterprise/entities/user";
 import { UserAvatar } from "@/domain/register/enterprise/value-objects/user-with-avatar";
@@ -14,11 +15,23 @@ import { PrismaUserMapper } from "../mappers/user-mapper";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
-export class PrismaUserRepository implements IUserRepository {
+export class PrismaUserRepository implements UserRepository {
 	private prisma: PrismaService;
 
 	constructor(prisma: PrismaService) {
 		this.prisma = prisma;
+	}
+
+	async create(user: SaveUserProps): Promise<void> {
+		await this.prisma.user.create({
+			data: {
+				age: user.age,
+				email: user.email,
+				name: user.name,
+				role: user.role,
+				password: user.password,
+			},
+		});
 	}
 
 	async findByEmail(email: string): Promise<User | null> {
@@ -37,6 +50,7 @@ export class PrismaUserRepository implements IUserRepository {
 			email: user.email,
 			name: user.name,
 			role: user.role,
+			password: user.password,
 		});
 	}
 
@@ -56,6 +70,7 @@ export class PrismaUserRepository implements IUserRepository {
 			email: user.email,
 			name: user.name,
 			role: user.role,
+			password: faker.internet.password(),
 		});
 	}
 
@@ -66,6 +81,7 @@ export class PrismaUserRepository implements IUserRepository {
 				email: user.email,
 				name: user.name,
 				role: user.role,
+				password: user.password,
 			},
 		});
 
@@ -75,6 +91,7 @@ export class PrismaUserRepository implements IUserRepository {
 			email: userCreated.email,
 			name: userCreated.name,
 			role: userCreated.role,
+			password: user.password,
 		});
 	}
 
@@ -119,7 +136,7 @@ export class PrismaUserRepository implements IUserRepository {
 	}
 
 	async update(user: EditUserProps): Promise<User> {
-		const userCreated = await this.prisma.user.update({
+		const updatedUser = await this.prisma.user.update({
 			where: {
 				id: user.id,
 			},
@@ -128,14 +145,16 @@ export class PrismaUserRepository implements IUserRepository {
 				email: user.email,
 				name: user.name,
 				role: user.role,
+				password: user.password,
 			},
 		});
 
 		return User.create({
-			age: userCreated.age,
-			email: userCreated.email,
-			name: userCreated.name,
-			role: userCreated.role,
+			age: updatedUser.age,
+			email: updatedUser.email,
+			name: updatedUser.name,
+			role: updatedUser.role,
+			password: updatedUser.password,
 		});
 	}
 
