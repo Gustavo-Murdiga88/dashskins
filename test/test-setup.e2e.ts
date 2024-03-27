@@ -1,5 +1,5 @@
 import { exec } from "node:child_process";
-import { mkdir, stat } from "node:fs/promises";
+import { existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
 
@@ -39,10 +39,8 @@ export async function deleteCurrentSchema() {
 beforeAll(async () => {
 	const mainPath = resolve(__dirname, "..", process.env.STORAGE);
 
-	try {
-		await stat(mainPath);
-	} catch {
-		await mkdir(mainPath);
+	if (!existsSync(mainPath)) {
+		mkdirSync(mainPath, { recursive: true });
 	}
 
 	generateScheme(schemaName);
