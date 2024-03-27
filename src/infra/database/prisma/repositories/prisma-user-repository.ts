@@ -150,6 +150,7 @@ export class PrismaUserRepository implements UserRepository {
 		});
 
 		return User.create({
+			id: updatedUser.id,
 			age: updatedUser.age,
 			email: updatedUser.email,
 			name: updatedUser.name,
