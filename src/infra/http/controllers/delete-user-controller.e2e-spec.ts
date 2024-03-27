@@ -14,8 +14,9 @@ import { deleteCurrentSchema } from "@/test/test-setup.e2e";
 describe("DELETE user E2E", () => {
 	let app: INestApplication;
 
-	let prismaRepository: PrismaUserRepository;
 	let accessToken: string;
+	let makeAuth: MakeAuth;
+	let makeUser: MakeUser;
 
 	afterAll(async () => {
 		await deleteCurrentSchema();
@@ -25,7 +26,7 @@ describe("DELETE user E2E", () => {
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule],
-			providers: [PrismaUserRepository, PrismaService],
+			providers: [PrismaUserRepository, PrismaService, MakeAuth, MakeUser],
 		})
 			.compile()
 			.then((module) => module);
@@ -33,15 +34,15 @@ describe("DELETE user E2E", () => {
 		app = moduleRef.createNestApplication();
 		await app.init();
 
-		prismaRepository = app.get<PrismaUserRepository>(PrismaUserRepository);
-
-		const signIn = await new MakeAuth(prismaRepository).signIn(app);
+		makeAuth = app.get<MakeAuth>(MakeAuth);
+		makeUser = app.get<MakeUser>(MakeUser);
+		const signIn = await makeAuth.signIn();
 
 		accessToken = signIn.accessToken;
 	});
 
 	it(`[DELETE] /user/:id delete an user that already exists`, async () => {
-		const user = await new MakeUser(prismaRepository).createUser({
+		const user = await makeUser.createUser({
 			name: faker.person.fullName(),
 			role: faker.helpers.arrayElement(["ALL", "EDIT", "DELETE"]),
 			email: faker.internet.email(),

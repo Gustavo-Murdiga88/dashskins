@@ -12,7 +12,7 @@ import { deleteCurrentSchema } from "@/test/test-setup.e2e";
 describe("Create user E2E", () => {
 	let app: INestApplication;
 	let accessToken: string;
-	let prismaRepository: PrismaUserRepository;
+	let makeAuth: MakeAuth;
 
 	afterAll(async () => {
 		await deleteCurrentSchema();
@@ -22,7 +22,7 @@ describe("Create user E2E", () => {
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule],
-			providers: [PrismaUserRepository, PrismaService],
+			providers: [PrismaUserRepository, PrismaService, MakeAuth],
 		})
 			.compile()
 			.then((module) => module);
@@ -30,12 +30,11 @@ describe("Create user E2E", () => {
 		app = moduleRef.createNestApplication();
 		await app.init();
 
-		prismaRepository =
-			moduleRef.get<PrismaUserRepository>(PrismaUserRepository);
+		makeAuth = moduleRef.get<MakeAuth>(MakeAuth);
 
-		const signIn = await new MakeAuth(prismaRepository).signIn(app);
+		const signin = await makeAuth.signIn();
 
-		accessToken = signIn.accessToken;
+		accessToken = signin.accessToken;
 	});
 
 	it(`[POST] /user`, async () => {

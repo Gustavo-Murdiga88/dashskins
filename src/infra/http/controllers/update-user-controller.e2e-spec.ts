@@ -13,8 +13,9 @@ import { deleteCurrentSchema } from "@/test/test-setup.e2e";
 
 describe("UPDATE user E2E", () => {
 	let app: INestApplication;
-	let prismaRepository: PrismaUserRepository;
 	let accessToken: string;
+	let makeAuth: MakeAuth;
+	let makeUser: MakeUser;
 
 	afterAll(async () => {
 		await deleteCurrentSchema();
@@ -24,7 +25,7 @@ describe("UPDATE user E2E", () => {
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule],
-			providers: [PrismaUserRepository, PrismaService],
+			providers: [PrismaUserRepository, PrismaService, MakeUser, MakeAuth],
 		})
 			.compile()
 			.then((module) => module);
@@ -32,15 +33,15 @@ describe("UPDATE user E2E", () => {
 		app = moduleRef.createNestApplication();
 		await app.init();
 
-		prismaRepository =
-			moduleRef.get<PrismaUserRepository>(PrismaUserRepository);
+		makeAuth = moduleRef.get<MakeAuth>(MakeAuth);
+		makeUser = moduleRef.get<MakeUser>(MakeUser);
 
-		const signIn = await new MakeAuth(prismaRepository).signIn(app);
+		const signIn = await makeAuth.signIn();
 		accessToken = signIn.accessToken;
 	});
 
 	it(`[PUT] /user update an user that already exists`, async () => {
-		const user = await new MakeUser(prismaRepository).createUser({
+		const user = await makeUser.createUser({
 			age: faker.number.int({
 				min: 10,
 				max: 100,

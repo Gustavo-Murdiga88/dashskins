@@ -13,7 +13,8 @@ import { deleteCurrentSchema } from "@/test/test-setup.e2e";
 describe("GET list users E2E", () => {
 	let app: INestApplication;
 	let accessToken: string;
-	let prismaRepository: PrismaUserRepository;
+	let makeAuth: MakeAuth;
+	let makeUser: MakeUser;
 
 	afterAll(async () => {
 		await deleteCurrentSchema();
@@ -23,7 +24,7 @@ describe("GET list users E2E", () => {
 	beforeAll(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [AppModule],
-			providers: [PrismaUserRepository, PrismaService],
+			providers: [PrismaUserRepository, PrismaService, MakeAuth, MakeUser],
 		})
 			.compile()
 			.then((module) => module);
@@ -31,10 +32,10 @@ describe("GET list users E2E", () => {
 		app = moduleRef.createNestApplication();
 		await app.init();
 
-		prismaRepository =
-			moduleRef.get<PrismaUserRepository>(PrismaUserRepository);
+		makeUser = moduleRef.get<MakeUser>(MakeUser);
+		makeAuth = moduleRef.get<MakeAuth>(MakeAuth);
 
-		const signIn = await new MakeAuth(prismaRepository).signIn(app);
+		const signIn = await makeAuth.signIn();
 
 		accessToken = signIn.accessToken;
 	});
@@ -75,7 +76,7 @@ describe("GET list users E2E", () => {
 	});
 
 	it(`[GET] /users?name="zac"`, async () => {
-		const user = await new MakeUser(prismaRepository).createUser({
+		const user = await makeUser.createUser({
 			age: faker.number.int({
 				min: 10,
 				max: 100,
