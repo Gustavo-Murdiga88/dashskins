@@ -31,6 +31,8 @@
   ```
   <br>
 
+  Crie um arquivo **.env** no repositório principal, e copie todos os dados do arquivo **.env.example** e cole no seu novo arquivo **.env**, após isso a url de conexão do banco de dados e a assinatura do jwt poderão ser lidas pelo servidor.
+
   Logo após iremos baixar as dependências, no diretório principal execute
 
    ```shell
@@ -58,3 +60,7 @@
     pnpm run dev
    ```
   após este processo, você receberá uma confirmação no seu terminal com todas as rotas hoje disponível no sistema.
+
+  ## Swagger
+
+  Para uma visão mais clara das rotas abra seu navegador na rota "http://localhost:3000/api"
