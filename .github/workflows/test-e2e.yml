@@ -8,6 +8,11 @@ jobs:
   test-e2e: 
     runs-on: ubuntu-latest
     steps:
+      - name: Add docker compose              
+        uses: hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: docker-compose.yaml
+
       - name: checkout
         uses: actions/checkout@v3
 
