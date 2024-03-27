@@ -1,0 +1,43 @@
+name: Test units dashskins
+
+on:
+  push:
+    branches: ["main"]
+
+jobs: 
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v3
+        name: pnpm install
+        with:
+          version: 8
+          run_install: false
+  
+      - name: get pnpm store path
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+  
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+  
+      - name: pnpm install
+        run: pnpm install 
+      
+      - name: run unit tests
+        run: pnpm test
+
+      
