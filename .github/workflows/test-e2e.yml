@@ -11,11 +11,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: Add docker compose              
-        uses: hoverkraft-tech/compose-action@v1.5.1
-        with:
-          compose-file: docker-compose.yaml
-
       - name: install node
         uses: actions/setup-node@v3
         with:
@@ -42,10 +37,19 @@ jobs:
 
       - name: install dependencies
         run: pnpm install
-      
+
+      - name: Setup posgres 
+        uses: ikalnytskyi/action-setup-postgres@v5
+        with:
+          username: docker
+          password: docker
+          database: dashskins
+          port: 5432
+          
+          
       - name: run tests e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           STORAGE: ${{ secrets.STORAGE }}
-        run: pnpm test:e2e
+        run: pnpm test:e2e  
