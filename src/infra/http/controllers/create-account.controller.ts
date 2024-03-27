@@ -5,6 +5,7 @@ import {
 	UnauthorizedException,
 	UsePipes,
 } from "@nestjs/common";
+import { ApiBody, ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
 import { Encrypter } from "@/domain/register/application/cryptography/encrypter";
@@ -34,6 +35,36 @@ export class CreateAccountController {
 		this.encrypter = encrypter;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiCreatedResponse({
+		description: "Response when account is created",
+		status: 201,
+	})
+	@ApiBody({
+		description: "Create an new user",
+		schema: {
+			format: "object",
+			properties: {
+				name: {
+					type: "string",
+				},
+				age: {
+					type: "number",
+					default: 25,
+				},
+				email: {
+					type: "string",
+				},
+				role: {
+					type: "string",
+					enum: ["ALL", "EDIT", "DELETE"],
+				},
+				password: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@Post("/account")
 	@UsePipes(new ZodValidationPipe(userSchemaValidation))
 	@Public()

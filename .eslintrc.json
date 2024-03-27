@@ -4,6 +4,7 @@
   ],
   "ignorePatterns": [
     "node_modules",
-    "dist"
+    "dist",
+    "**.md"
   ]
 }

@@ -1,4 +1,5 @@
 import { BadRequestException, Controller, Get, Query } from "@nestjs/common";
+import { ApiOkResponse, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 import { ListUserUseCase } from "@/domain/register/application/use-cases/list-users-usecase";
 
@@ -12,6 +13,28 @@ export class ListUserController {
 		this.usecase = usecase;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiQuery({
+		name: "name",
+		required: false,
+	})
+	@ApiQuery({
+		name: "page",
+		type: "number",
+		required: false,
+	})
+	@ApiOkResponse({
+		description: "Response when user try delete an user",
+		status: 200,
+		schema: {
+			format: "object",
+			properties: {
+				message: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@Get("/users")
 	async execute(@Query() query: { name: string; page: string }) {
 		const listOfUsers = await this.usecase.execute({

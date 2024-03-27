@@ -3,6 +3,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 
 import { CreateAccountUseCase } from "@/domain/register/application/use-cases/create-account-usecase";
+import { DeleteAvatarUseCase } from "@/domain/register/application/use-cases/delete-avatar-usecase";
 import { DeleteUserUseCase } from "@/domain/register/application/use-cases/delete-user-usecase";
 import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-user-usecase";
 import { ListUserUseCase } from "@/domain/register/application/use-cases/list-users-usecase";
@@ -18,6 +19,7 @@ import { EnvService } from "../env/env-service";
 import { StorageModule } from "../storage/storage.module";
 import { CreateAccountController } from "./controllers/create-account.controller";
 import { CreateUserController } from "./controllers/create-user.controller";
+import { DeleteAvatarController } from "./controllers/delete-avatar.controller";
 import { DeleteUserController } from "./controllers/delete-user.controller";
 import { ListUserController } from "./controllers/list-user.controller";
 import { SigInController } from "./controllers/singin.controller";
@@ -58,6 +60,7 @@ import { UploadAvatarController } from "./controllers/upload-avatar.controller";
 		CreateAccountController,
 		SigInController,
 		UploadAvatarController,
+		DeleteAvatarController,
 	],
 	providers: [
 		SaveUserUseCase,
@@ -67,6 +70,7 @@ import { UploadAvatarController } from "./controllers/upload-avatar.controller";
 		CreateAccountUseCase,
 		SigninUsecase,
 		SaveAvatarUseCase,
+		DeleteAvatarUseCase,
 	],
 })
 export class HttpModule {}

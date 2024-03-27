@@ -5,6 +5,7 @@ import {
 	UnauthorizedException,
 	UsePipes,
 } from "@nestjs/common";
+import { ApiBody, ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
 import { SigninUsecase } from "@/domain/register/application/use-cases/singin-usecase";
@@ -27,6 +28,35 @@ export class SigInController {
 		this.usecase = usecase;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiCreatedResponse({
+		description: "Response when user try create a session",
+		status: 201,
+		schema: {
+			properties: {
+				accessToken: {
+					type: "string",
+				},
+				refreshToken: {
+					type: "string",
+				},
+			},
+		},
+	})
+	@ApiBody({
+		description: "Create an new user",
+		schema: {
+			format: "object",
+			properties: {
+				email: {
+					type: "string",
+				},
+				password: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@Public()
 	@Post("/session")
 	@UsePipes(new ZodValidationPipe(sessionSchema))

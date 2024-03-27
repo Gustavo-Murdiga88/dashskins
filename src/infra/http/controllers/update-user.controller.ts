@@ -5,6 +5,12 @@ import {
 	Put,
 	UsePipes,
 } from "@nestjs/common";
+import {
+	ApiBody,
+	ApiCreatedResponse,
+	ApiOkResponse,
+	ApiTags,
+} from "@nestjs/swagger";
 import { z } from "zod";
 
 import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-user-usecase";
@@ -29,6 +35,41 @@ export class UpdateUserController {
 		this.usecase = usecase;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiOkResponse({
+		description: "Response when account is created",
+		status: 200,
+		schema: {
+			format: "object",
+			properties: {
+				message: {
+					type: "string",
+				},
+			},
+		},
+	})
+	@ApiBody({
+		description: "Create an new user",
+		schema: {
+			format: "object",
+			properties: {
+				name: {
+					type: "string",
+				},
+				age: {
+					type: "number",
+					default: 25,
+				},
+				email: {
+					type: "string",
+				},
+				role: {
+					type: "string",
+					enum: ["ALL", "EDIT", "DELETE"],
+				},
+			},
+		},
+	})
 	@Put("/user")
 	@UsePipes(new ZodValidationPipe(updateUserScheme))
 	async execute(@Body() body: BodyParsed) {

@@ -1,4 +1,5 @@
 import { BadRequestException, Controller, Delete, Param } from "@nestjs/common";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 
 import { DeleteUserUseCase } from "@/domain/register/application/use-cases/delete-user-usecase";
 
@@ -10,6 +11,19 @@ export class DeleteUserController {
 		this.usecase = usecase;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiOkResponse({
+		description: "Response when user try delete an user",
+		status: 200,
+		schema: {
+			format: "object",
+			properties: {
+				message: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@Delete("/user/:id")
 	async execute(@Param("id") id: string) {
 		const userDeleted = await this.usecase.execute({

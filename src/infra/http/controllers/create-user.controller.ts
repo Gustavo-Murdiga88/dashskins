@@ -5,6 +5,7 @@ import {
 	UnauthorizedException,
 	UsePipes,
 } from "@nestjs/common";
+import { ApiBody, ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
 import { SaveUserUseCase } from "@/domain/register/application/use-cases/save-user-usecase";
@@ -29,6 +30,55 @@ export class CreateUserController {
 		this.usecase = usecase;
 	}
 
+	@ApiTags("Dashskins")
+	@ApiCreatedResponse({
+		description: "Response when account is created",
+		status: 201,
+		schema: {
+			format: "object",
+			properties: {
+				name: {
+					type: "string",
+				},
+				age: {
+					type: "number",
+					default: 25,
+				},
+				email: {
+					type: "string",
+				},
+				role: {
+					type: "string",
+					enum: ["ALL", "EDIT", "DELETE"],
+				},
+			},
+		},
+	})
+	@ApiBody({
+		description: "Create an new user",
+		schema: {
+			format: "object",
+			properties: {
+				name: {
+					type: "string",
+				},
+				age: {
+					type: "number",
+					default: 25,
+				},
+				email: {
+					type: "string",
+				},
+				role: {
+					type: "string",
+					enum: ["ALL", "EDIT", "DELETE"],
+				},
+				password: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@Post("/user")
 	@UsePipes(new ZodValidationPipe(userSchemaValidation))
 	async execute(@Body() body: BodyParsed) {

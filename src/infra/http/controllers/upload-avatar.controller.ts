@@ -8,12 +8,18 @@ import {
 	UsePipes,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
+import { ApiBody, ApiConsumes, ApiProperty, ApiTags } from "@nestjs/swagger";
 
 import { SaveAvatarUseCase } from "@/domain/register/application/use-cases/save-avatar-usecase";
 
 import { FileSizeValidationPipe } from "../pipe/storage.pipe";
 
 const MAX_SIZE = 8 * 1024 * 1024 * 5; // 5Mb
+
+class FileUpload {
+	@ApiProperty({ type: "string", format: "binary" })
+	file: any;
+}
 
 @Controller()
 export class UploadAvatarController {
@@ -23,12 +29,19 @@ export class UploadAvatarController {
 		this.usecase = usecase;
 	}
 
-	@Post("/user/avatar/:id")
+	@ApiTags("Dashskins")
+	@ApiConsumes("multipart/form-data")
+	@ApiProperty({ type: "string", format: "binary" })
+	@ApiBody({
+		description: "Upload avatar",
+		type: FileUpload,
+	})
+	@Post("/user/avatar/:userId")
 	@UseInterceptors(FileInterceptor("file"))
 	@UsePipes(new FileSizeValidationPipe(MAX_SIZE))
 	async upload(
 		@UploadedFile("file") file: Express.Multer.File,
-		@Param("id") id: string,
+		@Param("userId") id: string,
 	) {
 		const type = file.mimetype.split("/")[1];
 

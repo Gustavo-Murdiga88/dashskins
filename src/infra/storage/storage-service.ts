@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { unlink, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { Injectable } from "@nestjs/common";
-import { rm, stat } from "fs/promises";
 
 import {
 	Deleter,
@@ -19,8 +19,6 @@ import { EnvService } from "../env/env-service";
 @Injectable()
 export class StorageService implements Deleter, Uploader {
 	private envService: EnvService;
-
-	private mainPath = resolve(__dirname);
 
 	constructor(envService: EnvService) {
 		this.envService = envService;
@@ -43,16 +41,21 @@ export class StorageService implements Deleter, Uploader {
 	}
 
 	async delete({ url }: IDeleter): Promise<void> {
-		const path = `${this.mainPath}/${this.envService.get("STORAGE")}/${url}`;
+		const path = resolve(
+			__dirname,
+			"..",
+			"..",
+			"..",
+			this.envService.get("STORAGE"),
+			url,
+		);
 
-		const statFile = await stat(path);
-
-		if (!statFile.isFile()) {
+		if (!existsSync(path)) {
 			throw new Error(
 				"Does not able find this file. Please check your file id",
 			);
 		}
 
-		await rm(path);
+		await unlink(path);
 	}
 }
