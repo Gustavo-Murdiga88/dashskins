@@ -44,4 +44,8 @@ jobs:
         run: pnpm install
       
       - name: run tests e2e
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          STORAGE: ${{ secrets.STORAGE }}
         run: pnpm test:e2e
