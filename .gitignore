@@ -36,3 +36,6 @@ lerna-debug.log*
 
 #DB POSTGRES
 ./data
+
+#static files
+/temp

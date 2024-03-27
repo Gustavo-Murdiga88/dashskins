@@ -34,6 +34,7 @@ describe("List users usecase", async () => {
 			role: faker.helpers.arrayElement(["ALL", "DELETE", "EDIT"]),
 			password: faker.internet.password(),
 		});
+
 		await usecase.execute({
 			age: faker.number.int({ min: 10, max: 30 }),
 			email: faker.internet.email(),

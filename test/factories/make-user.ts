@@ -1,7 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { hash } from "bcrypt";
 
 import { PrismaUserRepository } from "@/infra/database/prisma/repositories/prisma-user-repository";
 
+@Injectable()
 export class MakeUser {
 	private prisma: PrismaUserRepository;
 

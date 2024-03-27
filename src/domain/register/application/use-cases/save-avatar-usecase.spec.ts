@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 
 import { AvatarInMemoryRepository } from "@/test/repositories/avatar-in-memory-repository";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
+import { StorageDeleter } from "@/test/storage/deleter";
+import { StorageUploader } from "@/test/storage/uploader";
 
 import { AvatarRepository } from "../repositories/avatar-repository";
 import { SaveAvatarUseCase } from "./save-avatar-usecase";
@@ -12,12 +14,16 @@ describe("Save avatar usecase", async () => {
 	let userRepository: UserInMemoryRepository;
 	let usecase: SaveUserUseCase;
 	let sut: SaveAvatarUseCase;
+	let uploader: StorageUploader;
+	let deleter: StorageDeleter;
 
 	beforeEach(() => {
 		userRepository = new UserInMemoryRepository();
 		usecase = new SaveUserUseCase(userRepository);
 		repository = new AvatarInMemoryRepository();
-		sut = new SaveAvatarUseCase(repository);
+		uploader = new StorageUploader();
+		deleter = new StorageDeleter();
+		sut = new SaveAvatarUseCase(repository, uploader);
 	});
 
 	it("should be able sabe a new avatar for an user", async () => {
@@ -40,7 +46,9 @@ describe("Save avatar usecase", async () => {
 
 		const avatar = await sut.execute({
 			userId: id,
-			url: faker.internet.url(),
+			body: Buffer.from("test"),
+			name: faker.person.fullName(),
+			type: "jpg",
 		});
 
 		if (avatar.isLeft()) {
@@ -49,6 +57,8 @@ describe("Save avatar usecase", async () => {
 
 		expect(avatar.value.userId).toBe(id);
 		expect(avatar.value.url).toEqual(expect.any(String));
+
+		await deleter.delete({ url: avatar.value.url });
 	});
 
 	it("should be not able twice register avatar for some user", async () => {
@@ -69,16 +79,25 @@ describe("Save avatar usecase", async () => {
 
 		const { id } = user.value;
 
-		await sut.execute({
+		const avatarCreated = await sut.execute({
 			userId: id,
-			url: faker.internet.url(),
+			body: Buffer.from("test"),
+			name: faker.person.fullName(),
+			type: "jpg",
 		});
 
 		const avatar = await sut.execute({
 			userId: id,
-			url: faker.internet.url(),
+			body: Buffer.from("test"),
+			name: faker.person.fullName(),
+			type: "jpg",
 		});
 
+		if (avatarCreated.isLeft()) {
+			throw avatar.isLeft;
+		}
+
 		expect(avatar.value).toBeInstanceOf(Error);
+		await deleter.delete({ url: avatarCreated.value.url });
 	});
 });

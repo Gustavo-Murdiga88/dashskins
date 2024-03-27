@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 
 import { AvatarInMemoryRepository } from "@/test/repositories/avatar-in-memory-repository";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
+import { StorageDeleter } from "@/test/storage/deleter";
+import { StorageUploader } from "@/test/storage/uploader";
 
 import { AvatarRepository } from "../repositories/avatar-repository";
 import { EditAvatarUseCase } from "./edit-avatar-usecase";
@@ -14,12 +16,16 @@ describe("Save avatar usecase", async () => {
 	let usecase: SaveUserUseCase;
 	let createAvatar: SaveAvatarUseCase;
 	let sut: EditAvatarUseCase;
+	let uploader: StorageUploader;
+	let deleter: StorageDeleter;
 
 	beforeEach(() => {
 		userRepository = new UserInMemoryRepository();
 		usecase = new SaveUserUseCase(userRepository);
 		repository = new AvatarInMemoryRepository();
-		createAvatar = new SaveAvatarUseCase(repository);
+		uploader = new StorageUploader();
+		createAvatar = new SaveAvatarUseCase(repository, uploader);
+		deleter = new StorageDeleter();
 		sut = new EditAvatarUseCase(repository);
 	});
 
@@ -42,7 +48,9 @@ describe("Save avatar usecase", async () => {
 		const { id } = user.value;
 
 		const avatarCreated = await createAvatar.execute({
-			url: faker.internet.url(),
+			body: Buffer.from("teste"),
+			name: faker.person.fullName(),
+			type: "jpg",
 			userId: id,
 		});
 
@@ -61,5 +69,7 @@ describe("Save avatar usecase", async () => {
 		}
 
 		expect(avatar.value.url).toEqual(url);
+
+		await deleter.delete({ url: avatarCreated.value.url });
 	});
 });

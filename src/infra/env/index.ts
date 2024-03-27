@@ -4,6 +4,7 @@ const envSchema = z.object({
 	DATABASE_URL: z.string().url(),
 	JWT_SECRET: z.string(),
 	PORT: z.coerce.number().default(3000),
+	STORAGE: z.string(),
 });
 
 export function env() {

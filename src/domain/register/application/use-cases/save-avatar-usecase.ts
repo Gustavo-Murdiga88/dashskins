@@ -1,29 +1,46 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
 import { Avatar } from "../../enterprise/entities/avatar";
 import { AvatarRepository } from "../repositories/avatar-repository";
+import { Uploader } from "../storage/upload";
 
 type SaveUserRegisterUsecaseResponse = Promise<Either<Error, Avatar>>;
 type SaveAvatar = {
-	url: string;
+	body: Buffer;
+	name: string;
+	type: string;
 	userId: string;
 };
 @Injectable()
 export class SaveAvatarUseCase {
 	private repository: AvatarRepository;
 
-	constructor(repository: AvatarRepository) {
+	private uploader: Uploader;
+
+	constructor(repository: AvatarRepository, uploader: Uploader) {
 		this.repository = repository;
+		this.uploader = uploader;
 	}
 
-	async execute({ userId, url }: SaveAvatar): SaveUserRegisterUsecaseResponse {
+	async execute({
+		body,
+		name,
+		type,
+		userId,
+	}: SaveAvatar): SaveUserRegisterUsecaseResponse {
 		const userAlreadyAnAvatar = await this.repository.findByUserId(userId);
 
 		if (userAlreadyAnAvatar) {
-			return left(new Error("User already has an avatar"));
+			return left(new ForbiddenException("User already has an avatar"));
 		}
+
+		const url = await this.uploader.upload({
+			body,
+			name,
+			type,
+		});
 
 		const user = await this.repository.save({
 			userId,

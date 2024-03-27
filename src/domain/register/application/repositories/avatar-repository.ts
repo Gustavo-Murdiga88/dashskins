@@ -13,7 +13,7 @@ type EditAvatar = {
 export abstract class AvatarRepository {
 	abstract findByUserId: (userId: string) => Promise<Avatar | null>;
 
-	abstract findById(id: string): Promise<Avatar | undefined>;
+	abstract findById(id: string): Promise<Avatar | null>;
 
 	abstract save(avatar: SaveAvatar): Promise<Avatar>;
 

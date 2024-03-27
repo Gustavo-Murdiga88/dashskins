@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
 
 import { AvatarRepository } from "../repositories/avatar-repository";
+import { Deleter } from "../storage/delete";
 
 type DeleteAvatarUsecaseResponse = Promise<Either<Error, null>>;
 type DeleteAvatar = {
@@ -12,8 +13,11 @@ type DeleteAvatar = {
 export class DeleteAvatarUseCase {
 	private repository: AvatarRepository;
 
-	constructor(repository: AvatarRepository) {
+	private deleter: Deleter;
+
+	constructor(repository: AvatarRepository, deleter: Deleter) {
 		this.repository = repository;
+		this.deleter = deleter;
 	}
 
 	async execute({ id }: DeleteAvatar): DeleteAvatarUsecaseResponse {
@@ -24,6 +28,8 @@ export class DeleteAvatarUseCase {
 		}
 
 		await this.repository.delete(id);
+
+		await this.deleter.delete({ url: avatarExists.url });
 
 		return right(null);
 	}

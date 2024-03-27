@@ -18,8 +18,12 @@ export class AvatarInMemoryRepository implements AvatarRepository {
 		return avatarByUserId;
 	}
 
-	async findById(id: string): Promise<Avatar | undefined> {
+	async findById(id: string): Promise<Avatar | null> {
 		const avatar = this.avatars.find(({ props }) => props.id === id);
+		if (!avatar) {
+			return null;
+		}
+
 		return avatar;
 	}
 

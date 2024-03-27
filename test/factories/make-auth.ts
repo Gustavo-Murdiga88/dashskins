@@ -1,17 +1,21 @@
-import { INestApplication } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { hash } from "bcrypt";
-import request from "supertest";
 
 import { PrismaUserRepository } from "@/infra/database/prisma/repositories/prisma-user-repository";
 
+@Injectable()
 export class MakeAuth {
 	private prisma: PrismaUserRepository;
 
-	constructor(prisma: PrismaUserRepository) {
+	private jwt: JwtService;
+
+	constructor(prisma: PrismaUserRepository, jwt: JwtService) {
 		this.prisma = prisma;
+		this.jwt = jwt;
 	}
 
-	async signIn(app: INestApplication): Promise<{
+	async signIn(): Promise<{
 		accessToken: string;
 		refreshToken: string;
 	}> {
@@ -24,16 +28,25 @@ export class MakeAuth {
 			password: passwordHash,
 		});
 
-		const session = await request(app.getHttpServer()).post("/session").send({
-			email: "gustavo@me.com",
-			password: "12345678",
+		const token = await this.jwt.signAsync({
+			email: user.email,
+			id: user.id,
 		});
+		const refreshToken = await this.jwt.signAsync(
+			{
+				email: user.email,
+				id: user.id,
+			},
+			{
+				expiresIn: "7d",
+			},
+		);
 
 		await this.prisma.delete(user.id);
 
 		return {
-			accessToken: session.body.token,
-			refreshToken: session.body.refreshToken,
+			accessToken: token,
+			refreshToken,
 		};
 	}
 }

@@ -28,6 +28,11 @@ export class Avatar extends Entity<AvatarProps> {
 		return this.props.id;
 	}
 
+	get type() {
+		const [, type] = this.url.split(".");
+		return type;
+	}
+
 	static create({
 		url,
 		id,

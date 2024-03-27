@@ -1,4 +1,6 @@
 import { exec } from "node:child_process";
+import { mkdir, stat } from "node:fs/promises";
+import { resolve } from "node:path";
 import { promisify } from "node:util";
 
 import { PrismaClient } from "@prisma/client";
@@ -35,6 +37,14 @@ export async function deleteCurrentSchema() {
 }
 
 beforeAll(async () => {
+	const mainPath = resolve(__dirname, "..", process.env.STORAGE);
+
+	try {
+		await stat(mainPath);
+	} catch {
+		await mkdir(mainPath);
+	}
+
 	generateScheme(schemaName);
 	await execAsync("prisma migrate deploy");
 });
