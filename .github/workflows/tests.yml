@@ -4,18 +4,17 @@ on:
   push: 
     branches: ["main"]
   
-
 jobs: 
   test-e2e: 
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: latest
 
       - uses: pnpm/action-setup@v3
         name: pnpm install
@@ -46,12 +45,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: install node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: latest
 
       - uses: pnpm/action-setup@v3
         name: pnpm install
