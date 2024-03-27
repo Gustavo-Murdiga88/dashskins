@@ -41,7 +41,7 @@ describe("GET list users E2E", () => {
 	});
 
 	it(`[GET] /users`, async () => {
-		const promises = Array.from({ length: 22 }).map(() =>
+		const promises = Array.from({ length: 12 }).map(() =>
 			request(app.getHttpServer())
 				.post("/user")
 				.set({ Authorization: `Bearer ${accessToken}` })
@@ -57,15 +57,15 @@ describe("GET list users E2E", () => {
 		await Promise.all(promises);
 
 		const responseUsers = await request(app.getHttpServer())
-			.get(`/users?page=2`)
+			.get(`/users?page=1`)
 			.set({
 				Authorization: `Bearer ${accessToken}`,
 			});
 
 		expect(responseUsers.status).toBe(200);
 		expect(responseUsers.body.data).toHaveLength(2);
-		expect(responseUsers.body.totalPages).toBe(3);
-		expect(responseUsers.body.totalElements).toBe(22);
+		expect(responseUsers.body.totalPages).toBe(2);
+		expect(responseUsers.body.totalElements).toBe(12);
 		expect(responseUsers.body).toEqual(
 			expect.objectContaining({
 				totalPages: expect.any(Number),
