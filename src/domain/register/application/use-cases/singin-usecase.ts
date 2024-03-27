@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
@@ -15,6 +15,7 @@ type SingInUseCaseResponse = Promise<
 		}
 	>
 >;
+
 @Injectable()
 export class SigninUsecase {
 	private repository: UserRepository;
@@ -39,7 +40,7 @@ export class SigninUsecase {
 		const user = await this.repository.findByEmail(email);
 
 		if (!user) {
-			return left(new UnauthorizedException("email or password invalid"));
+			return left(new Error("email or password invalid"));
 		}
 
 		const passwordAreEqual = await this.comparer.compare(
@@ -48,7 +49,7 @@ export class SigninUsecase {
 		);
 
 		if (!passwordAreEqual) {
-			return left(new UnauthorizedException("email or password invalid"));
+			return left(new Error("email or password invalid"));
 		}
 
 		const token = await this.jwt.sign({

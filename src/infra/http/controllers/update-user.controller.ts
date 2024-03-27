@@ -1,4 +1,10 @@
-import { Body, Controller, Put, UsePipes } from "@nestjs/common";
+import {
+	BadRequestException,
+	Body,
+	Controller,
+	Put,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 import { UpdateUserUseCase } from "@/domain/register/application/use-cases/edit-user-usecase";
@@ -37,7 +43,7 @@ export class UpdateUserController {
 		});
 
 		if (userEdited.isLeft()) {
-			throw userEdited.value;
+			throw new BadRequestException(userEdited.value.message);
 		}
 
 		return {

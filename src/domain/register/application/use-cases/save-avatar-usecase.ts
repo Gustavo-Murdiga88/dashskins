@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
@@ -13,6 +13,7 @@ type SaveAvatar = {
 	type: string;
 	userId: string;
 };
+
 @Injectable()
 export class SaveAvatarUseCase {
 	private repository: AvatarRepository;
@@ -33,7 +34,7 @@ export class SaveAvatarUseCase {
 		const userAlreadyAnAvatar = await this.repository.findByUserId(userId);
 
 		if (userAlreadyAnAvatar) {
-			return left(new ForbiddenException("User already has an avatar"));
+			return left(new Error("User already has an avatar"));
 		}
 
 		const url = await this.uploader.upload({

@@ -9,6 +9,7 @@ type DeleteAvatarUsecaseResponse = Promise<Either<Error, null>>;
 type DeleteAvatar = {
 	id: string;
 };
+
 @Injectable()
 export class DeleteAvatarUseCase {
 	private repository: AvatarRepository;

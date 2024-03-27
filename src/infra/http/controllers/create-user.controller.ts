@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 import { SaveUserUseCase } from "@/domain/register/application/use-cases/save-user-usecase";
@@ -36,7 +42,7 @@ export class CreateUserController {
 		});
 
 		if (user.isLeft()) {
-			throw user.value;
+			throw new UnauthorizedException(user.value.message);
 		}
 
 		return {

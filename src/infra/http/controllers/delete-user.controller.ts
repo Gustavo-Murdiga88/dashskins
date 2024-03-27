@@ -1,4 +1,4 @@
-import { Controller, Delete, Param } from "@nestjs/common";
+import { BadRequestException, Controller, Delete, Param } from "@nestjs/common";
 
 import { DeleteUserUseCase } from "@/domain/register/application/use-cases/delete-user-usecase";
 
@@ -17,7 +17,7 @@ export class DeleteUserController {
 		});
 
 		if (userDeleted.isLeft()) {
-			throw userDeleted.value;
+			throw new BadRequestException(userDeleted.value.message);
 		}
 
 		return {

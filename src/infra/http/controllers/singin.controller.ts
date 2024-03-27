@@ -1,9 +1,15 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 import { SigninUsecase } from "@/domain/register/application/use-cases/singin-usecase";
 
-import { Public } from "../../auth/auth-metada";
+import { Public } from "../../auth/auth-metadata";
 import { ZodValidationPipe } from "../pipe/zod.pipe";
 
 const sessionSchema = z.object({
@@ -33,7 +39,7 @@ export class SigInController {
 		});
 
 		if (session.isLeft()) {
-			throw session.value;
+			throw new UnauthorizedException(session.value.message);
 		}
 
 		return {

@@ -20,7 +20,7 @@ import { CreateAccountController } from "./controllers/create-account.controller
 import { CreateUserController } from "./controllers/create-user.controller";
 import { DeleteUserController } from "./controllers/delete-user.controller";
 import { ListUserController } from "./controllers/list-user.controller";
-import { SigInController } from "./controllers/sigin.controller";
+import { SigInController } from "./controllers/singin.controller";
 import { UpdateUserController } from "./controllers/update-user.controller";
 import { UploadAvatarController } from "./controllers/upload-avatar.controller";
 

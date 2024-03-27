@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
@@ -32,7 +32,7 @@ export class UpdateUserUseCase {
 		const userAlreadyExists = await this.repository.findById(id);
 
 		if (!userAlreadyExists) {
-			return left(new BadRequestException("User does not exists"));
+			return left(new Error("User does not exists"));
 		}
 
 		const user = await this.repository.update({

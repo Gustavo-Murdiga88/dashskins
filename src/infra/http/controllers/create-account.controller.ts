@@ -1,10 +1,16 @@
-import { Body, Controller, Post, UsePipes } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Post,
+	UnauthorizedException,
+	UsePipes,
+} from "@nestjs/common";
 import { z } from "zod";
 
 import { Encrypter } from "@/domain/register/application/cryptography/encrypter";
 import { CreateAccountUseCase } from "@/domain/register/application/use-cases/create-account-usecase";
 
-import { Public } from "../../auth/auth-metada";
+import { Public } from "../../auth/auth-metadata";
 import { ZodValidationPipe } from "../pipe/zod.pipe";
 
 const userSchemaValidation = z.object({
@@ -45,7 +51,7 @@ export class CreateAccountController {
 		});
 
 		if (account.isLeft()) {
-			throw account.value;
+			throw new UnauthorizedException(account.value.message);
 		}
 	}
 }

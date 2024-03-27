@@ -11,6 +11,7 @@ type ListUser = {
 	name?: string;
 	page?: number;
 };
+
 @Injectable()
 export class ListUserUseCase {
 	private repository: UserRepository;
@@ -26,7 +27,7 @@ export class ListUserUseCase {
 		});
 
 		if (listUsers instanceof Error) {
-			return left(listUsers);
+			return left(new Error("Error to list users"));
 		}
 
 		return right(listUsers);

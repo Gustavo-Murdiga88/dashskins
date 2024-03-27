@@ -1,5 +1,6 @@
 import {
 	Controller,
+	ForbiddenException,
 	Param,
 	Post,
 	UploadedFile,
@@ -8,7 +9,6 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
 
-import { Uploader } from "@/domain/register/application/storage/upload";
 import { SaveAvatarUseCase } from "@/domain/register/application/use-cases/save-avatar-usecase";
 
 import { FileSizeValidationPipe } from "../pipe/storage.pipe";
@@ -40,7 +40,7 @@ export class UploadAvatarController {
 		});
 
 		if (avatar.isLeft()) {
-			throw avatar.value;
+			throw new ForbiddenException(avatar.value.message);
 		}
 
 		return {

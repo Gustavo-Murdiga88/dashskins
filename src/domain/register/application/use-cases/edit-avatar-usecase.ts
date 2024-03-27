@@ -10,6 +10,7 @@ type EditAvatar = {
 	id: string;
 	url: string;
 };
+
 @Injectable()
 export class EditAvatarUseCase {
 	private repository: AvatarRepository;

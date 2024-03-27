@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { Either, left, right } from "@/core/either";
 
@@ -8,6 +8,7 @@ type DeleteUserUsecaseResponse = Promise<Either<Error, null>>;
 type DeleteUser = {
 	id: string;
 };
+
 @Injectable()
 export class DeleteUserUseCase {
 	private repository: UserRepository;
@@ -20,7 +21,7 @@ export class DeleteUserUseCase {
 		const user = await this.repository.findById(id);
 
 		if (!user) {
-			return left(new BadRequestException("User not exists"));
+			return left(new Error("User not exists"));
 		}
 
 		await this.repository.delete(id);
