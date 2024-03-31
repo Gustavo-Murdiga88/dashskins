@@ -55,12 +55,15 @@ export class SigninUsecase {
 		const token = await this.jwt.sign({
 			email: user.email,
 			id: user.id,
+			name: user.name,
+			avatarURL: user.avatar?.url ?? "",
 		});
 
 		const refreshToken = await this.jwt.sign(
 			{
 				email: user.email,
 				id: user.id,
+				name: user.name,
 			},
 			{ expiresIn: "7d" },
 		);

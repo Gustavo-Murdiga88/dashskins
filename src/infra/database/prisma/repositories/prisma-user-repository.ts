@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 
 import { IPagination } from "@/core/pagination";
@@ -8,6 +7,7 @@ import {
 	SaveUserProps,
 	UserRepository,
 } from "@/domain/register/application/repositories/user-repository";
+import { Avatar } from "@/domain/register/enterprise/entities/avatar";
 import { User } from "@/domain/register/enterprise/entities/user";
 import { UserAvatar } from "@/domain/register/enterprise/value-objects/user-with-avatar";
 
@@ -39,6 +39,9 @@ export class PrismaUserRepository implements UserRepository {
 			where: {
 				email,
 			},
+			include: {
+				avatar: true,
+			},
 		});
 
 		if (!user) {
@@ -46,11 +49,17 @@ export class PrismaUserRepository implements UserRepository {
 		}
 
 		return User.create({
+			id: user.id,
 			age: user.age,
 			email: user.email,
 			name: user.name,
 			role: user.role,
 			password: user.password,
+			avatar: Avatar.create({
+				userId: user.id,
+				id: user.avatar?.id,
+				url: user.avatar?.url,
+			}),
 		});
 	}
 
@@ -58,6 +67,9 @@ export class PrismaUserRepository implements UserRepository {
 		const user = await this.prisma.user.findFirst({
 			where: {
 				id,
+			},
+			include: {
+				avatar: true,
 			},
 		});
 
@@ -70,7 +82,12 @@ export class PrismaUserRepository implements UserRepository {
 			email: user.email,
 			name: user.name,
 			role: user.role,
-			password: faker.internet.password(),
+			password: user.password,
+			avatar: Avatar.create({
+				userId: user.id,
+				id: user.avatar?.id ?? undefined,
+				url: user.avatar?.url ?? undefined,
+			}),
 		});
 	}
 
@@ -107,6 +124,7 @@ export class PrismaUserRepository implements UserRepository {
 			where: {
 				name: {
 					contains: name,
+					mode: "insensitive",
 				},
 			},
 		});
@@ -115,6 +133,7 @@ export class PrismaUserRepository implements UserRepository {
 			where: {
 				name: {
 					contains: name,
+					mode: "insensitive",
 				},
 			},
 			include: {

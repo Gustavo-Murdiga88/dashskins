@@ -33,6 +33,7 @@ import { UploadAvatarController } from "./controllers/upload-avatar.controller";
 		CryptographyModule,
 		StorageModule,
 		ServeStaticModule.forRootAsync({
+			isGlobal: true,
 			imports: [EnvModule],
 			inject: [EnvService],
 			useFactory: (envService: EnvService) => {

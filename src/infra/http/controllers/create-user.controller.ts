@@ -73,7 +73,7 @@ export class CreateUserController {
 					type: "string",
 					enum: ["ALL", "EDIT", "DELETE"],
 				},
-				password: {
+				id: {
 					type: "string",
 				},
 			},
@@ -102,6 +102,7 @@ export class CreateUserController {
 				age: user.value.age,
 				email: user.value.email,
 				role: user.value.role,
+				avatar: user.value.avatar,
 			},
 		};
 	}

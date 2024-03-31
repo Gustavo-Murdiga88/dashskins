@@ -8,7 +8,13 @@ import {
 	UsePipes,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
-import { ApiBody, ApiConsumes, ApiProperty, ApiTags } from "@nestjs/swagger";
+import {
+	ApiBody,
+	ApiConsumes,
+	ApiCreatedResponse,
+	ApiProperty,
+	ApiTags,
+} from "@nestjs/swagger";
 
 import { SaveAvatarUseCase } from "@/domain/register/application/use-cases/save-avatar-usecase";
 
@@ -32,6 +38,20 @@ export class UploadAvatarController {
 	@ApiTags("Dashskins")
 	@ApiConsumes("multipart/form-data")
 	@ApiProperty({ type: "string", format: "binary" })
+	@ApiCreatedResponse({
+		description: "Response when user try create a session",
+		status: 201,
+		schema: {
+			properties: {
+				url: {
+					type: "string",
+				},
+				id: {
+					type: "string",
+				},
+			},
+		},
+	})
 	@ApiBody({
 		description: "Upload avatar",
 		type: FileUpload,
