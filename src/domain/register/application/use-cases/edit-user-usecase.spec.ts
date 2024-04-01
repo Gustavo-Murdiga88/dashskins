@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 import { Left } from "@/core/either";
+import { FakerEncrypter } from "@/test/cryptography/faker-encrypter";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
 import { UpdateUserUseCase } from "./edit-user-usecase";
@@ -10,10 +11,12 @@ describe("Edit user usecase", async () => {
 	let sut: UpdateUserUseCase;
 	let usecase: SaveUserUseCase;
 	let repository: UserInMemoryRepository;
+	let encrypter: FakerEncrypter;
 
 	beforeEach(() => {
 		repository = new UserInMemoryRepository();
-		usecase = new SaveUserUseCase(repository);
+		encrypter = new FakerEncrypter();
+		usecase = new SaveUserUseCase(repository, encrypter);
 		sut = new UpdateUserUseCase(repository);
 	});
 

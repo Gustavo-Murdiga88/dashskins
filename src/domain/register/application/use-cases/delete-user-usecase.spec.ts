@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker";
 
 import { Left } from "@/core/either";
+import { FakerEncrypter } from "@/test/cryptography/faker-encrypter";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
+import { StorageDeleter } from "@/test/storage/deleter";
 
 import { DeleteUserUseCase } from "./delete-user-usecase";
 import { SaveUserUseCase } from "./save-user-usecase";
@@ -10,11 +12,15 @@ describe("Delete user usecase", async () => {
 	let sut: DeleteUserUseCase;
 	let usecase: SaveUserUseCase;
 	let repository: UserInMemoryRepository;
+	let encrypter: FakerEncrypter;
+	let deleter: StorageDeleter;
 
 	beforeEach(() => {
 		repository = new UserInMemoryRepository();
-		usecase = new SaveUserUseCase(repository);
-		sut = new DeleteUserUseCase(repository);
+		encrypter = new FakerEncrypter();
+		usecase = new SaveUserUseCase(repository, encrypter);
+		deleter = new StorageDeleter();
+		sut = new DeleteUserUseCase(repository, deleter);
 	});
 
 	it("should be able delete an user", async () => {

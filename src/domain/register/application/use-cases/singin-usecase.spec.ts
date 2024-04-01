@@ -21,23 +21,22 @@ describe("signin user", async () => {
 
 	beforeEach(() => {
 		repository = new UserInMemoryRepository();
-		saveUser = new SaveUserUseCase(repository);
-		comparer = new FakerComparer();
 		encrypter = new FakerEncrypter();
+		saveUser = new SaveUserUseCase(repository, encrypter);
+		comparer = new FakerComparer();
 		jwt = new FakerSign();
 
 		sut = new SigninUsecase(repository, jwt, comparer);
 	});
 
-	it("should be able register a new user", async () => {
+	it("should be able signin with correct credentials", async () => {
 		const password = faker.internet.password();
-		const encryptedPassword = await encrypter.encrypt(password);
 
 		await saveUser.execute({
 			age: 20,
 			email: "john@john.com.br",
 			name: "John Doe",
-			password: encryptedPassword,
+			password,
 		});
 
 		const auth = await sut.execute({

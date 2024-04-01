@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+import { FakerEncrypter } from "@/test/cryptography/faker-encrypter";
 import { AvatarInMemoryRepository } from "@/test/repositories/avatar-in-memory-repository";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 import { StorageDeleter } from "@/test/storage/deleter";
@@ -18,10 +19,12 @@ describe("Save avatar usecase", async () => {
 	let sut: EditAvatarUseCase;
 	let uploader: StorageUploader;
 	let deleter: StorageDeleter;
+	let encrypter: FakerEncrypter;
 
 	beforeEach(() => {
 		userRepository = new UserInMemoryRepository();
-		usecase = new SaveUserUseCase(userRepository);
+		encrypter = new FakerEncrypter();
+		usecase = new SaveUserUseCase(userRepository, encrypter);
 		repository = new AvatarInMemoryRepository();
 		uploader = new StorageUploader();
 		createAvatar = new SaveAvatarUseCase(repository, uploader);

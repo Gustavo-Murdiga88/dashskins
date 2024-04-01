@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+import { FakerEncrypter } from "@/test/cryptography/faker-encrypter";
 import { UserInMemoryRepository } from "@/test/repositories/user-in-memory-repository";
 
 import { SaveUserUseCase } from "./save-user-usecase";
@@ -7,10 +8,12 @@ import { SaveUserUseCase } from "./save-user-usecase";
 describe("Save user usecase", async () => {
 	let sut: SaveUserUseCase;
 	let repository: UserInMemoryRepository;
+	let encrypter: FakerEncrypter;
 
 	beforeEach(() => {
+		encrypter = new FakerEncrypter();
 		repository = new UserInMemoryRepository();
-		sut = new SaveUserUseCase(repository);
+		sut = new SaveUserUseCase(repository, encrypter);
 	});
 
 	it("should be able register an new user", async () => {
