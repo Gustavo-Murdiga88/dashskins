@@ -68,4 +68,4 @@
 
   ## Front end
   Seguir as instruções deste repo para integrar como sistema front-end
-  https://github.com/Gustavo-Murdiga88/dashskins
+  https://github.com/Gustavo-Murdiga88/dashskins-front
