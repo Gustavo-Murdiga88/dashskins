@@ -64,3 +64,8 @@
   ## Swagger
 
   Para uma visão mais clara das rotas abra seu navegador na rota "http://localhost:3000/api"
+
+
+  ## Front end
+  Seguir as instruções deste repo para integrar como sistema front-end
+  https://github.com/Gustavo-Murdiga88/dashskins
