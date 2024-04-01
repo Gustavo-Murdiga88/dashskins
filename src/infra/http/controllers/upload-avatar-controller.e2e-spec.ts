@@ -19,15 +19,7 @@ describe("POST save avatar", () => {
 	let makeAuth: MakeAuth;
 	let makeUser: MakeUser;
 	let deleter: StorageDeleter;
-	const imagePath = resolve(
-		__dirname,
-		"..",
-		"..",
-		"..",
-		"..",
-		"test",
-		"unit-test-image.jpg",
-	);
+	const imagePath = resolve("test", "unit-test-image.jpg");
 
 	afterAll(async () => {
 		await deleteCurrentSchema();
